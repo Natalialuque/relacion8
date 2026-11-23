@@ -15,6 +15,12 @@ function paginaError($mensaje)
   finCuerpo();  
 }
 
+/**
+ * Ini cabecera 
+ *
+ * @param [type] $titulo
+ * @return void
+ */
 function inicioCabecera($titulo)
 {
 ?>
