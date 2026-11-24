@@ -1,5 +1,19 @@
 <?php
 include_once(dirname(__FILE__) . "/../../cabecera.php");
+
+/**
+  * IMPORTANTE --> Para que el contador funcione debe de estar arriba del todo porque las cookies funcionan mediante
+  * cabeceras HTTP, igual que header(), Si ya se ha enviado cualquier HTML al navegador, php no puede enviar las cookies
+  */
+if (isset($_COOKIE["contador"])) {
+    //para sumar de uno en uno
+    $contador = $_COOKIE["contador"] + 1;
+} else {
+    $contador = 1;
+}
+
+setcookie("contador", $contador, time() + 365 * 24 * 60 * 60);
+
 //controlador
 //dibuja la plantilla de la vista
 inicioCabecera("APLICACION PRIMER TRIMESTRE");
@@ -9,10 +23,10 @@ inicioCabecera("APLICACION PRIMER TRIMESTRE");
  "Index Personalizar"=> "./index.php",
  
  ];
- ?>
- <!-- LLAMAMOS A LOS ESTILOS POR DEFECTO Y LO APLICAMOS -->
-<style>
 
+ ?>
+ <!-- DEBEMOS LLAMAR A LOS ESTILOS PARA QUE SE APLIQUEN -->
+<style>
 #documento{
     background-color: <?= $colorFondo ?>;
     color: <?= $colorTexto ?>;
@@ -24,18 +38,17 @@ inicioCabecera("APLICACION PRIMER TRIMESTRE");
 cabecera();
 finCabecera();
 inicioCuerpo("2DAW APLICACION",$ubicacion);
-cuerpo(); //llamo a la vista
+cuerpo($contador); //llamo a la vista
 finCuerpo();
 // **********************************************************
 ////vista cabecera donde podemos ver otros enlaces 
 
 function cabecera() {}
 //vista
-function cuerpo()
+function cuerpo($contador)
 {
 ?>
-<div id="documento">
-    Hola, esta es mi página personalizada.
-</div>
+    <p>Hola, esta es mi página index de la carpeta personalizar.</p>
+    <p>Has visitado esta página <?= $contador ?> veces.</p>
 <?php
 }

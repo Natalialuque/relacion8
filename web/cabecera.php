@@ -49,8 +49,9 @@ const COLORESFONDO = [
     "Amarillo" => "yellow",
     "Gris" => "gray"
 ];
+
 /**
- * Si no existen cookies asignamos estos colores por defecto
+ * Creamos las cookies con valores de los colores y si no existen asignamos los por defecto 
  */
-$colorFondo = $_COOKIE["fondo"] ?? "white";
-$colorTexto = $_COOKIE["texto"] ?? "black";
+$colorFondo = $_COOKIE["colorFondo"] ?? "white";
+$colorTexto = $_COOKIE["colorTexto"] ?? "black";

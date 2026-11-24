@@ -1,7 +1,5 @@
 <?php
 include_once(dirname(__FILE__) . "/../../cabecera.php");
-
-//dibuja la plantilla de la vista
 //barra de ubicacion logica que nos indica donde estamos
 $ubicacion = [
     "pagina principal" => "../../index.php",
@@ -11,7 +9,7 @@ $ubicacion = [
 
 //controlador
 /**
- * Para que cambie de color al pulsar
+ * LO QUE SUCEDE AL PULSAR GUARDAR--> se aplican los cambios de colores, vuelve a suceder lo mismo que en index, debe de estar arriba porque si no las cookies no funcionan
  */
 if (isset($_POST["guardaColores"])) {
 
@@ -22,6 +20,15 @@ if (isset($_POST["guardaColores"])) {
     exit();
 }
 
+?>
+ <!-- DEBEMOS LLAMAR A LOS ESTILOS PARA QUE SE APLIQUEN -->
+<style>
+#documento{
+    background-color: <?= $colorFondo ?>;
+    color: <?= $colorTexto ?>;
+}
+</style>
+<?php
 inicioCabecera("APLICACION PRIMER TRIMESTRE");
 cabecera();
 finCabecera();
@@ -37,11 +44,13 @@ function cuerpo()
 {
     formulario();
 ?>
+
 <?php
+
 }
 
 /**
- * Formulario en el que creamos los dos combos con los colores de texto y de fondo y boton guardar
+ * FUNCION FORMULARIO --> Formulario en el que creamos los dos combos con los colores de texto y de fondo y boton guardar
  *
  * @return void
  */
