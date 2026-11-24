@@ -31,3 +31,26 @@ include(RUTABASE."/scripts/librerias/validacion.php");
 
 
 //creo todos los objetos que necesita mi aplicación
+
+/**
+ * Dos constantes para los los colores del texto y los colores del fondo
+ */
+const COLORESTEXTO = [
+    "Negro" => "black",
+    "Azul" => "blue",
+    "Blanco" => "white",
+    "Rojo" => "red"
+];
+
+const COLORESFONDO = [
+    "Blanco" => "white",
+    "Rojo" => "red",
+    "Verde" => "green",
+    "Amarillo" => "yellow",
+    "Gris" => "gray"
+];
+/**
+ * Si no existen cookies asignamos estos colores por defecto
+ */
+$colorFondo = $_COOKIE["fondo"] ?? "white";
+$colorTexto = $_COOKIE["texto"] ?? "black";

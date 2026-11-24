@@ -29,12 +29,7 @@ function cuerpo()
         
 
     </ul>   
-        <br><br>
-
-        <h3 id="TituloCuerpo">Pruebas<h3>
-    <ul>
-
-    </ul>
+   
     
 <?php
 }

@@ -1,10 +1,5 @@
 <?php
-/**
- * Hola function
- *
- * @param [type] $mensaje
- * @return void
- */
+
 function paginaError($mensaje)
 {
   header("HTTP/1.0 404 $mensaje");
@@ -76,8 +71,8 @@ function inicioCuerpo($cabecera,?array $ubicacion = null)
                 <div id="menuPrincipal" >
                     <ul>
                         <li><a href="/index.php">Inicio</a></li>
-                       
-
+                       <li><a href="/aplicacion/personalizar/index.php">index_Carpeta_Personalizar</a></li>
+                       <li><a href="/aplicacion/personalizar/personalizar.php">Personalizar</a></li>
 
                     </ul>
 
