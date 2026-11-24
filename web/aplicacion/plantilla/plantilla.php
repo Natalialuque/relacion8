@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Hola function
+ *
+ * @param [type] $mensaje
+ * @return void
+ */
 function paginaError($mensaje)
 {
   header("HTTP/1.0 404 $mensaje");
