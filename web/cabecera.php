@@ -51,7 +51,7 @@ const COLORESFONDO = [
 ];
 
 /**
- * Creamos las cookies con valores de los colores y si no existen asignamos los por defecto 
+ * Creamos las cookies con valores de los colores y si no existen asignamos los por defecto ñ
  */
 $colorFondo = $_COOKIE["colorFondo"] ?? "white";
 $colorTexto = $_COOKIE["colorTexto"] ?? "black";
