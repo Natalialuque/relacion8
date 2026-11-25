@@ -17,7 +17,9 @@ $errores = [];
 //Recogemo los textos de la sesión (o array vacío si no hay)
 $textos = $_SESSION["textos"] ?? [];
 
-//Botón REGISTRAR
+/**
+ * BOTON REGISTRAR --> 
+ */
 if (isset($_POST["registrar"])) {
     $texto = trim($_POST["texto"] ?? "");
 
