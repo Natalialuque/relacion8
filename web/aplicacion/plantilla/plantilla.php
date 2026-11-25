@@ -73,6 +73,7 @@ function inicioCuerpo($cabecera,?array $ubicacion = null)
                         <li><a href="/index.php">Inicio</a></li>
                        <li><a href="/aplicacion/personalizar/index.php">index_Carpeta_Personalizar</a></li>
                        <li><a href="/aplicacion/personalizar/personalizar.php">Personalizar</a></li>
+                       <li><a href="/aplicacion/texto/verTextos.php">Ver Textos</a></li>
 
                     </ul>
 

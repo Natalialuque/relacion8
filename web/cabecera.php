@@ -6,6 +6,8 @@ define("RUTABASE", dirname(__FILE__));
 //define("MODO_TRABAJO","produccion"); //en "produccion o en desarrollo
 define("MODO_TRABAJO","desarrollo"); //en "produccion o en desarrollo
 
+
+
 if (MODO_TRABAJO=="produccion")
     error_reporting(0);
     else 
@@ -25,9 +27,17 @@ spl_autoload_register(function ($clase){
             throw new Exception("La clase $clase no se ha encontrado.");
         }
 });
+// La clase tiene que existir ANTES de abrir la sesión
+require_once(RUTABASE."/aplicacion/clases/RegistroTexto.php");
+
+
+//Para las sesiones 
+session_start();
 
 include(RUTABASE."/aplicacion/plantilla/plantilla.php");
 include(RUTABASE."/scripts/librerias/validacion.php");
+
+
 
 
 //creo todos los objetos que necesita mi aplicación
@@ -50,8 +60,3 @@ const COLORESFONDO = [
     "Gris" => "gray"
 ];
 
-/**
- * Creamos las cookies con valores de los colores y si no existen asignamos los por defecto ñ
- */
-$colorFondo = $_COOKIE["colorFondo"] ?? "white";
-$colorTexto = $_COOKIE["colorTexto"] ?? "black";

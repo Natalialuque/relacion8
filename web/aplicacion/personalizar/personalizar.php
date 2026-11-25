@@ -7,42 +7,91 @@ $ubicacion = [
 
 ];
 
-//controlador
+$errores=[];
+$datos=[];
+
 /**
- * LO QUE SUCEDE AL PULSAR GUARDAR--> se aplican los cambios de colores, vuelve a suceder lo mismo que en index, debe de estar arriba porque si no las cookies no funcionan
+ * Debemos comprobar primero si las cookies existen y si no asignamos por defecto blanco y negro
+ */
+
+//Fondo
+if(isset($_COOKIE["colorFondo"]) && in_array($_COOKIE["colorFondo"], COLORESFONDO, true)){
+    $datos["colorFondo"]=$_COOKIE["colorFondo"];
+}else{
+    $datos["colorFondo"]="white";
+}
+
+//Texto
+if(isset($_COOKIE["colorTexto"])&& in_array($_COOKIE["colorTexto"], COLORESTEXTO, true)){
+    $datos["colorTexto"]=$_COOKIE["colorTexto"];
+}else{
+    $datos["colorTexto"]="black";
+}
+
+
+/**
+ * LO QUE SUCEDE AL PULSAR GUARDAR--> Se aplican los colores selecionados en el documento 
  */
 if (isset($_POST["guardaColores"])) {
 
-    setcookie("colorFondo", $_POST["fondo"], time() + 3600 * 24 * 30);
-    setcookie("colorTexto", $_POST["texto"], time() + 3600 * 24 * 30);
+    $fondo = $_POST["colorFondo"] ?? "";
+    $texto = $_POST["colorTexto"] ?? "";
 
-    header("Location: personalizar.php");
-    exit();
-}
+    // Validamos --> el valor tiene que ser uno de los de las constantes
+    if (!in_array($fondo, COLORESFONDO, true))
+        $errores[] = "El color de fondo no es válido.";
+    if (!in_array($texto, COLORESTEXTO, true))
+        $errores[] = "El color del texto no es válido.";
+    if (empty($errores) && $fondo === $texto)
+        $errores[] = "El fondo y el texto no pueden ser del mismo color.";
 
-?>
- <!-- DEBEMOS LLAMAR A LOS ESTILOS PARA QUE SE APLIQUEN -->
-<style>
-#documento{
-    background-color: <?= $colorFondo ?>;
-    color: <?= $colorTexto ?>;
+    //Si no hay errores -->
+   if (empty($errores)) {
+        //actualizacion de la cokie nueva
+        $caduca = time() + 60 * 60 * 24 * 30;
+
+        setcookie("colorFondo", $fondo, $caduca);
+        setcookie("colorTexto", $texto, $caduca);
+
+        header("Location: personalizar.php");
+        exit();
+    }
 }
-</style>
-<?php
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 inicioCabecera("APLICACION PRIMER TRIMESTRE");
-cabecera();
+cabecera($datos);
 finCabecera();
 inicioCuerpo("2DAW APLICACION", $ubicacion);
-cuerpo(); //llamo a la vista
+cuerpo($datos,$errores); //llamo a la vista
 finCuerpo();
-// **********************************************************
+///////////////////////////////////////////////////////////////////////////////////////////
 ////vista cabecera donde podemos ver otros enlaces 
 
-function cabecera() {}
+/**
+ *FUNCION CABECERA --> En esta funcion debemos pasar el <style> que va ir modificando el codigo
+ * @param array $datos
+ * @return void
+ */
+function cabecera(array $datos) {
+?>
+<style>
+#documento{
+    background-color: <?= $datos["colorFondo"] ?>;
+    color: <?= $datos["colorTexto"]  ?>;
+}
+
+</style>
+
+<?php
+}
 //vista
-function cuerpo()
+function cuerpo(array $datos, array $errores)
 {
-    formulario();
+    //recorremos errores
+    foreach ($errores as $error)
+        echo "<p><strong>" . htmlspecialchars($error) . "</strong></p>";
+    //formulario
+    formulario($datos);
 ?>
 
 <?php
@@ -54,35 +103,36 @@ function cuerpo()
  *
  * @return void
  */
-function formulario(){
+function formulario(array $datos){
 ?>
     <form method="post">
-
-        <label>Color fondo</label>
-        <select name="fondo">
-
-            <?php
-            foreach (COLORESFONDO as $nombre => $valor) {
-                echo "<option value='$valor'>$nombre</option>";
-            }
+        <label for="colorFondo">Color de fondo:</label>
+        <select name="colorFondo" id="colorFondo">
+            <?php 
+            foreach (COLORESFONDO as $nombre => $valor) { ?>
+                <option value="<?= $valor ?>" <?= ($valor === $datos["colorFondo"]) ? "selected" : "" ?>>
+                    <?= $nombre ?>
+                </option>
+            <?php 
+            } 
             ?>
-
         </select>
-<br><br>
-        <label>Color texto</label>
+        <br><br>
 
-        <select name="texto">
-
+        <label for="colorTexto">Color del texto:</label>
+        <select name="colorTexto" id="colorTexto">
+            <?php 
+            foreach (COLORESTEXTO as $nombre => $valor) { ?>
+                <option value="<?= $valor ?>" <?= ($valor === $datos["colorTexto"]) ? "selected" : "" ?>>
+                    <?= $nombre ?>
+                </option>
             <?php
-            foreach (COLORESTEXTO as $nombre => $valor) {
-                echo "<option value='$valor'>$nombre</option>";
-            }
-            ?>
-
+             } 
+             ?>
         </select>
-<br><br>
-        <input type="submit" value="Guardar" name="guardaColores">
+        <br><br>
 
+        <input type="submit" name="guardaColores" value="Guardar">
     </form>
 <?php
 }
