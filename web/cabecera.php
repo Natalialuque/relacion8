@@ -60,3 +60,7 @@ const COLORESFONDO = [
     "Gris" => "gray"
 ];
 
+
+//Crea una instancia de cada una de nuestras clases 
+$acl = new ACLArray();
+$acceso = new Acceso();

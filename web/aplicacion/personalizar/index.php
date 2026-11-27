@@ -7,6 +7,19 @@ include_once(dirname(__FILE__) . "/../../cabecera.php");
  
  ];
 
+//verificamos que haya usuario y si no redirigimos
+ if (!$acceso->hayUsuario()) {
+    header("Location: /aplicacion/acceso/login.php");
+    exit;
+}
+
+//creammos sesion 
+if(isset($_POST["cerrarSesion"])) $acceso->quitarRegistroUsuario();
+
+/**
+ * CONTROLADOR
+ */
+//datos
 $datos=[];
 
 /**

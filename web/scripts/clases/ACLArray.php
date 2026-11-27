@@ -191,7 +191,7 @@
                          "cod" => $cont,
                           "nick" =>  $nick,
                          "nombre" => $nombre,
-                          "contrasenia" =>  $contrasena,
+                          "contrasenia" => password_hash($contrasena, PASSWORD_BCRYPT),
                           "cod_role" => $codRole,
                           "borrado" => false       
             ];

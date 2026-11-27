@@ -66,15 +66,38 @@ function inicioCuerpo($cabecera,?array $ubicacion = null)
             <header>
                 <span id="logo"><a href="/"><img src="/imagenes/logo.png"></a></span>
                 <h1 id="titulo"><?php echo $cabecera;?></h1>
+                <?php 
+                    if($acceso->hayUsuario()) {
+                        echo "<h4>Bienvenido ". $acceso->getNick() ."</h4>";
+                         ?>
+                        <form action="/aplicacion/acceso/loggout.php" method="post">
+                            <button name="cerrarSesion">Cerrar sesión</button>
+                        </form>
+                    <?php 
+                    }
+                    else echo "<a href=\"../aplicacion/acceso/login.php\">Iniciar Sesión</a>";
+                ?>
             </header>
 
                 <div id="menuPrincipal" >
                     <ul>
                         <li><a href="/index.php">Inicio</a></li>
-                       <li><a href="/aplicacion/personalizar/index.php">index_Carpeta_Personalizar</a></li>
-                       <li><a href="/aplicacion/personalizar/personalizar.php">Personalizar</a></li>
-                       <li><a href="/aplicacion/texto/verTextos.php">Ver Textos</a></li>
-
+                        <?php
+                         if($acceso->hayUsuario()) {
+                        ?>
+                            <li><a href="/aplicacion/personalizar/index.php">index_Carpeta_Personalizar</a></li>
+                            <li><a href="/aplicacion/texto/verTextos.php">Ver Textos</a></li>
+                       <?php
+                    
+                    ?>
+                     <?php
+                         if($acceso->puedePermiso(1)) {
+                        ?>
+                            <li><a href="/aplicacion/personalizar/personalizar.php">Personalizar</a></li>
+                       <?php
+                    }
+                    }
+                    ?>
                     </ul>
 
 

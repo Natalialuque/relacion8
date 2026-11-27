@@ -7,6 +7,20 @@ $ubicacion = [
 
 ];
 
+//verificamos que haya usuario y si no redirigimos
+if(!$acceso->puedePermiso(1)){
+     paginaError("No tienes permiso para acceder a esta página");
+     exit;
+}
+
+//creammos sesion 
+if(isset($_POST["cerrarSesion"])) $acceso->quitarRegistroUsuario();
+
+
+/**
+ * CONTROLADOR
+ */
+
 $errores=[];
 $datos=[];
 
