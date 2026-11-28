@@ -25,23 +25,20 @@ class Acceso {
      *
      * @return boolean Devuelve true si se ha podido hacer. False en cualquier otro caso
      */
-    private function escribirASesion():bool
-    {
+    private function escribirASesion():bool{
      if (!isset($_SESSION))    
          return false;
      
-     if ($this->_validado)
-     {
+     if ($this->_validado){
          $_SESSION["acceso"]["validado"]=true;
          $_SESSION["acceso"]["nick"]=$this->_nick;
          $_SESSION["acceso"]["nombre"]=$this->_nombre;
          $_SESSION["acceso"]["permisos"]=$this->_permisos;
          
-     }
-     else 
-     {
+     }else {
          $_SESSION["acceso"]["validado"]=false;
      }
+     return false;
     }
     
     /**
@@ -49,17 +46,14 @@ class Acceso {
      *
      * @return boolean Devuelve true si se ha podido recoger
      */
-    private function recogerDeSesion():bool
-    {
+    private function recogerDeSesion():bool{
        if (!isset($_SESSION) ||
            !isset($_SESSION["acceso"]) ||
            !isset($_SESSION["acceso"]["validado"]) ||
            $_SESSION["acceso"]["validado"]==false)
        {
            $this->_validado=false;
-       }
-       else 
-       {
+       }else {
            $this->_validado=true;
            $this->_nick=$_SESSION["acceso"]["nick"];
            $this->_nombre=$_SESSION["acceso"]["nombre"];
@@ -81,8 +75,7 @@ class Acceso {
      * @param array $permisos permisos del usuario a registrar
      * @return boolean Devuelve true si ha podido registrar el usuario
      */
-    public function registrarUsuario(string $nick, string $nombre, array $permisos):bool
-     {
+    public function registrarUsuario(string $nick, string $nombre, array $permisos):bool{
         if ($nick == "")
             $this->_validado = false;
         else
@@ -118,6 +111,11 @@ class Acceso {
      * @return boolean Devuelve true si hay usuario registrado. False en caso contrario
      */
     public function hayUsuario():bool {
+        if($this -> _validado){
+            return true;
+        }else{
+            return false;
+        }
      }
     
     
@@ -128,7 +126,10 @@ class Acceso {
      * @return bool Devuelve true si hay usuario registrado y tiene el permiso indicado
      */
     public function puedePermiso(int $numero):bool {
-       
+       if($numero<1 || $numero>10) return false;
+       if($this->hayUsuario())
+            return in_array("perm".$numero, $this->_permisos);
+        return false;
     }
     
     
@@ -141,8 +142,11 @@ class Acceso {
       *
       * @return string|false
       */
-    public function getNick():string|false 
-    { 
+    public function getNick():string|false { 
+        if($this->hayUsuario()) {
+            return $this->_nick;
+        }
+        return false;
        
     }
   

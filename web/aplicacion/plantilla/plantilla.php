@@ -15,6 +15,12 @@ function paginaError($mensaje)
   finCuerpo();  
 }
 
+/**
+ * Ini cabecera 
+ *
+ * @param [type] $titulo
+ * @return void
+ */
 function inicioCabecera($titulo)
 {
 ?>
@@ -60,14 +66,40 @@ function inicioCuerpo($cabecera,?array $ubicacion = null)
             <header>
                 <span id="logo"><a href="/"><img src="/imagenes/logo.png"></a></span>
                 <h1 id="titulo"><?php echo $cabecera;?></h1>
+                <?php 
+                    //AQUI MIRAMOS QUE ESTE EL USUARIO LOGEADO O QUE TENGAMOS EL BOTON DE CERRAR SESION
+                    if($acceso->hayUsuario()) {
+                        echo "<h4>Bienvenido ". $acceso->getNick() ."</h4>";
+                         ?>
+                        <form action="/aplicacion/acceso/loggout.php" method="post">
+                            <button name="cerrarSesion">Cerrar sesión</button>
+                        </form>
+                    <?php 
+                    }
+                    else echo "<a href=\"../aplicacion/acceso/login.php\">Iniciar Sesión</a>";
+                ?>
             </header>
 
                 <div id="menuPrincipal" >
                     <ul>
                         <li><a href="/index.php">Inicio</a></li>
-                       
-
-
+                        <!-- CON ESTO HACEMOS QUE SE MUESTRE LA BARRA CON UNA CANTIDAD DE DATOS O CON OTRA -->
+                        <?php
+                         if($acceso->hayUsuario()) {
+                        ?>
+                            <li><a href="/aplicacion/personalizar/index.php">index_Carpeta_Personalizar</a></li>
+                            <li><a href="/aplicacion/texto/verTextos.php">Ver Textos</a></li>
+                       <?php
+                    
+                    ?>
+                     <?php
+                         if($acceso->puedePermiso(1)) {
+                        ?>
+                            <li><a href="/aplicacion/personalizar/personalizar.php">Personalizar</a></li>
+                       <?php
+                    }
+                    }
+                    ?>
                     </ul>
 
 

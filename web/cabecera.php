@@ -6,6 +6,8 @@ define("RUTABASE", dirname(__FILE__));
 //define("MODO_TRABAJO","produccion"); //en "produccion o en desarrollo
 define("MODO_TRABAJO","desarrollo"); //en "produccion o en desarrollo
 
+
+
 if (MODO_TRABAJO=="produccion")
     error_reporting(0);
     else 
@@ -25,9 +27,40 @@ spl_autoload_register(function ($clase){
             throw new Exception("La clase $clase no se ha encontrado.");
         }
 });
+// La clase tiene que existir ANTES de abrir la sesión
+require_once(RUTABASE."/aplicacion/clases/RegistroTexto.php");
+
+
+//Para las sesiones 
+session_start();
 
 include(RUTABASE."/aplicacion/plantilla/plantilla.php");
 include(RUTABASE."/scripts/librerias/validacion.php");
 
 
+
+
 //creo todos los objetos que necesita mi aplicación
+
+/**
+ * Dos constantes para los los colores del texto y los colores del fondo
+ */
+const COLORESTEXTO = [
+    "Negro" => "black",
+    "Azul" => "blue",
+    "Blanco" => "white",
+    "Rojo" => "red"
+];
+
+const COLORESFONDO = [
+    "Blanco" => "white",
+    "Rojo" => "red",
+    "Verde" => "green",
+    "Amarillo" => "yellow",
+    "Gris" => "gray"
+];
+
+
+//Crea una instancia de cada una de nuestras clases 
+$acl = new ACLArray();
+$acceso = new Acceso();

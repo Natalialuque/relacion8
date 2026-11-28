@@ -30,10 +30,10 @@
         
         
 
-        function __construct()
-        {
+        function __construct(){
             //añade los roles
-            $this->anadirRole("normales",[1=>true]);
+            //Vacio el de normales ya que estaba puesto a permiso 1, para que no tenga nignun permiso
+            $this->anadirRole("normales",[]);
             $this->anadirRole("administradores",[1=>true,2=>true]);
             
             //añade los usuario
@@ -53,8 +53,7 @@
          * @param array $permisos Permisos que tendrá el role. Array con hasta 10 permisos
          * @return bool True si se ha podido crear, false en caso contrario
          */
-        function anadirRole(string $nombre, array $permisos=array()):bool
-        {
+        function anadirRole(string $nombre, array $permisos=array()):bool{
             //pongo el nombre en minuscula
             $nombre=mb_strtolower($nombre);
             
@@ -99,8 +98,7 @@
          * @param string $nombre nombre del role
          * @return integer|false Devuelve el código de role para el nombre indicado o false si no encuentra el role
          */
-        function getCodRole(string $nombre):int|false
-        {
+        function getCodRole(string $nombre):int|false{
             //pongo el nombre en minuscula
             $nombre=mb_strtolower($nombre);
             foreach($this->_roles as $clave=>$role)
@@ -118,9 +116,12 @@
          * @param integer $codRole role a buscar
          * @return boolean Devuelve true si lo encuentra o false en caso contrario 
          */
-        function existeRole(int $codRole):bool
-        {
-            
+        function existeRole(int $codRole):bool{
+            if (array_key_exists($codRole, $this->_roles)) {
+                return true;
+            }else{
+                return false;
+            } 
         }
 
         /**
@@ -129,8 +130,7 @@
          * @param integer $codRole Role a buscar
          * @return array|false Devuelve los permisos o false si no encuentra el role
          */
-        function getPermisosRole(int $codRole):array|false
-        {
+        function getPermisosRole(int $codRole):array|false{
             //compruebo que existe el codigo de role
             if (!$this->existeRole($codRole))
                  return false;
@@ -145,9 +145,11 @@
          * @param integer $numero Número de permiso
          * @return boolean True si encuentra el role y lo tiene. False en cualquier otro caso
          */
-        function getPermisoRole(int $codRole, int $numero): bool
-        {
-              
+        function getPermisoRole(int $codRole, int $numero): bool{
+            
+            if ($this->existeRole($codRole) && isset($this->_roles[$codRole]["permisos"][$numero]))
+                return $this->_roles[$codRole]["permisos"][$numero];
+             return false;
         }
 
         /**
@@ -159,8 +161,7 @@
          * @param integer $codRole Role a asignarle
          * @return boolean Devuelve true si puede crearlo. False en caso contrario
          */
-       function anadirUsuario(string $nombre, string $nick, string $contrasena, int $codRole):bool
-        {
+       function anadirUsuario(string $nombre, string $nick, string $contrasena, int $codRole):bool{
             //pongo el nick as minuscula
             $nick=mb_strtolower($nick);  
             
@@ -175,7 +176,6 @@
 
             //la contraseña la guardo encriptada
 			//establecer el método
-            $contrasena= método encriptado;
 
             //busco cual es el ultimo codigo
             $cont=0;
@@ -192,7 +192,7 @@
                          "cod" => $cont,
                           "nick" =>  $nick,
                          "nombre" => $nombre,
-                          "contrasenia" =>  $contrasena,
+                          "contrasenia" => password_hash($contrasena, PASSWORD_BCRYPT),
                           "cod_role" => $codRole,
                           "borrado" => false       
             ];
@@ -207,8 +207,7 @@
          * @param string $nick nick del usuario a buscar
          * @return integer|false Devuelve el codigo del usuario o false si no lo encuentra
          */
-        function getCodUsuario(string $nick):int|false
-        {
+        function getCodUsuario(string $nick):int|false{
             //pongo el nick n minuscula
             $nick=mb_strtolower($nick);  
             
@@ -232,9 +231,12 @@
          * @param integer $codUsuario Código del usuario a verificar
          * @return boolean Devuelve si existe o no el usuario
          */
-        function existeCodUsuario(int $codUsuario):bool
-        {
-            
+        function existeCodUsuario(int $codUsuario):bool{
+            if (array_key_exists($codUsuario, $this->_usuarios)) {
+                return true;
+            }else{
+                return false;
+            } 
         }
 
         /**
@@ -244,9 +246,14 @@
          * @return boolean Devuelve true si encuentra el usuario y 
          * false en caso contrario
          */
-        function existeUsuario(string $nick):bool
-        {
-               
+        function existeUsuario(string $nick):bool{
+             $nick=mb_strtolower($nick);
+
+            foreach($this->_usuarios as $valor)   {
+                if ($valor["nick"] == $nick)
+                     return true;
+            }
+            return false;
         }
 
         /**
@@ -257,8 +264,7 @@
          * @return boolean Devuelve true si existe el usuario y tiene la contraseña indicada. 
          * False en otro caso
          */
-        function esValido(string $nick, string $contrasena):bool
-        {
+        function esValido(string $nick, string $contrasena):bool{
             //pongo el nick n minuscula
             $nick=mb_strtolower($nick);  
             
@@ -270,13 +276,11 @@
             $codigo=$this->getCodUsuario($nick);
             
 			//establecer el metodo de encriptado
-            $contrasena= metodo de encriptado;
+            if (!password_verify($contrasena, $this->_usuarios[$codigo]["contrasenia"])) {
+                return false;
+            }
 
-            if ($this->_usuarios[$codigo]["contrasenia"]!=$contrasena)
-                 return false;
-                
-            // es valido
-            return true; 
+            return true;
         }
 
          /**
@@ -287,9 +291,13 @@
          * @return boolean Devuelve true si existe el usuario y tiene el permiso. 
          * False en otro caso
          */
-        function getPermiso(int $codUsuario, int $numero):bool
-        {
-
+        function getPermiso(int $codUsuario, int $numero):bool{
+            $codRole=$this->getUsuarioRole($codUsuario);
+            if ($codRole===false){
+                return false;
+            }
+                
+            return $this->getPermisoRole($codRole, $numero);
         }
 
         /**
@@ -299,9 +307,13 @@
          * @return array|false Devuelve los permisos del usuario o false si 
          * no existe el usuario
          */
-        function getPermisos(int $codUsuario):array|false
-        {
+        function getPermisos(int $codUsuario):array|false{
+            if (array_key_exists($codUsuario, $this->_usuarios)) {
+                $roles = $this->_usuarios[$codUsuario]["cod_role"];
 
+                return $this->_roles[$roles]["permisos"];
+            }
+            return false;
 
         }
 
@@ -311,8 +323,7 @@
          * @param integer $codUsuario Usuario a buscar
          * @return string|false Devuelve el nombre del usuario o false si no existe
          */
-        function getNombre(int $codUsuario):string|false
-        {
+        function getNombre(int $codUsuario):string|false{
             if (!$this->existeCodUsuario($codUsuario))
                  return false;
     
@@ -327,10 +338,12 @@
          * @return boolean true si el usuario existe y no está borrado.
          * False en otro caso
          */
-        function getBorrado(int $codUsuario):bool
-        {
-
-
+        function getBorrado(int $codUsuario):bool{
+           if(!$this->existeCodUsuario($codUsuario)){
+                    return false;
+           }
+            
+            return $this->_usuarios[$codUsuario]["borrado"];
         }
 
         /**
@@ -355,8 +368,7 @@
          * @param string $nombre Nombre a asignar
          * @return boolean Devuelve true si ha podido asignar el nombre, false en otro caso
          */
-        function setNombre(int $codUsuario,string $nombre):bool
-        {
+        function setNombre(int $codUsuario,string $nombre):bool{
             if (!$this->existeCodUsuario($codUsuario))
                  return false;
     
@@ -373,9 +385,13 @@
          * @return boolean Devuelve true si ha podido asignar la contraseña
          * False en otro caso
          */
-        function setContrasenia(int $codUsuario, string $contrasenia):bool
-        {
-
+        function setContrasenia(int $codUsuario, string $contrasenia):bool{
+            if (array_key_exists($codUsuario, $this->_usuarios)) {
+                    $this->_usuarios[$codUsuario]["contrasenia"] = password_hash($contrasenia, PASSWORD_BCRYPT);
+                     return true;
+            }
+            
+            return false;
 
         }
 
@@ -387,8 +403,7 @@
          * @return boolean Devuelve true si ha podido asignar el estado. 
          * False en otro caso
          */
-        function setBorrado(int $codUsuario, bool $borrado):bool
-        {
+        function setBorrado(int $codUsuario, bool $borrado):bool{
             if (!$this->existeCodUsuario($codUsuario))
                  return false;
     
@@ -407,9 +422,15 @@
          * @return boolean Devuelve true si ha podido asignar el role al usuario.
          * False si no existe el usuario, role o no ha podido asignarlo
          */
-        function setUsuarioRole(int $codUsuario, int $role):bool
-        {
- 
+        function setUsuarioRole(int $codUsuario, int $role):bool{
+            if (array_key_exists($codUsuario, $this->_usuarios)) {
+            if (array_key_exists($role, $this->_roles)) {
+                $this->_usuarios[$codUsuario]["cod_role"] = $role;
+                return true;
+            }
+            return false;
+        }
+        return false;
 
         }
 
@@ -419,8 +440,13 @@
          *
          * @return array Array con todos los usuarios existentes
          */
-        function dameUsuarios():array
-        {
+        function dameUsuarios():array{
+
+            $array = [];
+            foreach ($this->_usuarios as $clave => $valor) {
+                $array[$clave] = $valor["nick"];
+            }
+            return $array;
 
         }
 
