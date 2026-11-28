@@ -67,6 +67,7 @@ function inicioCuerpo($cabecera,?array $ubicacion = null)
                 <span id="logo"><a href="/"><img src="/imagenes/logo.png"></a></span>
                 <h1 id="titulo"><?php echo $cabecera;?></h1>
                 <?php 
+                    //AQUI MIRAMOS QUE ESTE EL USUARIO LOGEADO O QUE TENGAMOS EL BOTON DE CERRAR SESION
                     if($acceso->hayUsuario()) {
                         echo "<h4>Bienvenido ". $acceso->getNick() ."</h4>";
                          ?>
@@ -82,6 +83,7 @@ function inicioCuerpo($cabecera,?array $ubicacion = null)
                 <div id="menuPrincipal" >
                     <ul>
                         <li><a href="/index.php">Inicio</a></li>
+                        <!-- CON ESTO HACEMOS QUE SE MUESTRE LA BARRA CON UNA CANTIDAD DE DATOS O CON OTRA -->
                         <?php
                          if($acceso->hayUsuario()) {
                         ?>

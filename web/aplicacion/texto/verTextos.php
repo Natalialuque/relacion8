@@ -28,7 +28,7 @@ $errores = [];
 $textos = $_SESSION["textos"] ?? [];
 
 /**
- * BOTON REGISTRAR --> 
+ * BOTON REGISTRAR --> metemos el texto en el text area
  */
 if (isset($_POST["registrar"])) {
     $texto = trim($_POST["texto"] ?? "");
@@ -76,8 +76,12 @@ function cuerpo(array $textos, array $errores)
     mostrarTextos($textos);
 }
 
-function formulario()
-{
+/**
+ * FORMULARIO --> Muestra el input y el boton de texto
+ *
+ * @return void
+ */
+function formulario(){
 ?>
     <form method="post">
         <label for="texto">Texto:</label>
@@ -87,6 +91,12 @@ function formulario()
 <?php
 }
 
+/**
+* FORMULARIO MOSTRAR TEXTOS --> Sirve para mostrar el textArea
+*
+* @param array $textos
+* @return void
+*/
 function mostrarTextos(array $textos){
 ?>
     <form method="post">

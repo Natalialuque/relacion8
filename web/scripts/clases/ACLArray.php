@@ -32,7 +32,8 @@
 
         function __construct(){
             //añade los roles
-            $this->anadirRole("normales",[1=>true]);
+            //Vacio el de normales ya que estaba puesto a permiso 1, para que no tenga nignun permiso
+            $this->anadirRole("normales",[]);
             $this->anadirRole("administradores",[1=>true,2=>true]);
             
             //añade los usuario

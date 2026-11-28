@@ -7,6 +7,12 @@ $ubicacion = [
 
 ];
 
+//verificamos que haya usuario
+if (!$acceso->hayUsuario()) {
+    header("Location: /aplicacion/acceso/login.php");
+    exit;
+}
+
 //verificamos que haya usuario y si no redirigimos
 if(!$acceso->puedePermiso(1)){
      paginaError("No tienes permiso para acceder a esta página");
